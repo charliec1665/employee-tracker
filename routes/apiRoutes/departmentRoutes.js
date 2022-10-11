@@ -1,21 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
+const cTable = require('console.table');
 
 // GET all departments
-router.get('/departments', (req, res) => {
-    const sql = `SELECT * FROM departments`;
-    db.query(sql, (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json({
-            message: 'success',
-            data: rows
+const getDepartments = () => {
+    return new Promise((req, res) => {
+        const sql = `SELECT * FROM departments`;
+        db.query(sql, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            res.json({
+                message: 'Success!',
+                data: rows
+            })
+        })
+    })
+};
+
+    router.get('/departments', (req, res) => {
+        const sql = `SELECT * FROM departments`;
+        db.query(sql, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            res.json({
+                message: 'success',
+                data: rows
+            });
         });
     });
-});
+
 
 // GET a single department
 router.get('/department/:id', (req, res) => {

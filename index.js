@@ -1,8 +1,10 @@
-const { application } = require('express');
 const inquirer = require('inquirer');
-const generateTable = require('./utils/generateTable');
+const express = require('express');
+const router = express.Router();
+const db = require('./db/connection');
+const cTable = require('console.table');
 
-// Array of questions for user input
+// Questions for user input
 const startupQuestion = {
         type: 'list',
         name: 'action',
@@ -22,14 +24,20 @@ const addRole = {
     message: 'What is the title of the role?'
 }
 
-const addingDepartment = async () => {
-    let inq1 = await inquirer.prompt(startupQuestion);
-    let answer = String(inq1.action);
-    console.log(answer);
+// Function to pull startup choice and pass info into result
+const listOptions = async () => {
+    let inq = await inquirer.prompt(startupQuestion);
+    let answer = String(inq.action);
     
-    return new Promise( (resolve, reject) => {
-        if (answer === 'Add a department') {
-            inquirer.prompt(addDepartment);
+    return new Promise((resolve, reject) => {
+        if (answer === 'View all departments') {
+            getDepartments(depts);
+            console.log(depts);
+            // let table = cTable.getTable(depts);
+            // console.log(table);
+        } else if (answer === 'Add a department') {
+            let inqDept = inquirer.prompt(addDepartment);
+            
         } else if (answer === 'Add a role') {
             inquirer.prompt(addRole);
         }
@@ -37,4 +45,4 @@ const addingDepartment = async () => {
 };
 
 // Function call to initialize app
-addingDepartment();
+listOptions();
